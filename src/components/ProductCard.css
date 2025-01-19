@@ -1,0 +1,46 @@
+/* General styling for the product card */
+div {
+    width: 250px; /* Set width to match the design */
+   /* border: 1px solid #ddd; /* Light border around the card */
+ /*  border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Prevent overflow from borders */
+    font-family: Arial, sans-serif; /* Default font style */
+    background-color: white; /* White background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin: 20px auto; /* Center the card */
+}
+
+/* Styling for the image */
+img {
+    width: 100%; /* Full width of the card */
+    display: block; /* Remove extra space below the image */
+}
+
+/* Styling for product title */
+span:first-of-type {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333; /* Dark gray color */
+    padding: 8px 12px 4px;
+}
+
+/* Styling for product price */
+span:nth-of-type(2) {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #e91e63; /* Pinkish red for price */
+    padding: 4px 12px;
+}
+
+/* Styling for the product card label */
+h1 {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #555; /* Gray for title */
+    margin: 10px 0;
+    padding: 10px 0;
+    border-top: 1px solid #eee; /* Line separating details */
+}
