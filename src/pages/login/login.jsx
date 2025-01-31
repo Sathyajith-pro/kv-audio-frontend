@@ -6,11 +6,16 @@ export default function LoginPage(){
     const [email,setEmail] = useState("");
     const [password,setPassword]=useState("");
 
+    function handleOnSubmit(e){
+        e.preventDefault()
+        console.log(email,password)
+    }
+
 
     return(
         
         <div className="w-full h-screen bg-picture flex items-center justify-center">
-            <form>
+            <form onSubmit={handleOnSubmit}>
             <div className="w-[400px] h-[400px] backdrop-blur-xl rounded-2xl flex justify-center items-center flex-col relative">
                 <img src="/logo.png" className="w-[110px] h-[110px] absolute top-1 object-cover"/>
 
