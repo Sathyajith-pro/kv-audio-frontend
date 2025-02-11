@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const sampleArr = [
   {
@@ -27,6 +27,7 @@ const sampleArr = [
 export default function AdminItemsPage() {
   const [items, setItems] = useState(sampleArr);
   const [itemsloaded, setItemsLoaded] = useState(false);
+  const navigate =useNavigate()
 
 
   useEffect(() => {
@@ -99,9 +100,11 @@ export default function AdminItemsPage() {
                   )}
                 </td>
                 <td className="p-3 border text-center space-x-2">
-                  <Link to={`/admin/items/edit/${product.key}`} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700">
+                  <button onClick={()=>{
+                    navigate(`/admin/items/edit`, {state:product})
+                  }} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700">
                     Edit
-                  </Link>
+                  </button>
                   <button
                     onClick={() => handleDelete(product.key)}
                     className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
