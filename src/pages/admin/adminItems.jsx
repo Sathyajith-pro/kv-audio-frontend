@@ -26,20 +26,28 @@ const sampleArr = [
 
 export default function AdminItemsPage() {
   const [items, setItems] = useState(sampleArr);
+  const [itemsloaded, setItemsLoaded] = useState(false);
+
 
   useEffect(() => {
+
+    if(!itemsloaded){
     const token = localStorage.getItem("token");
     axios
       .get("http://localhost:3002/api/products", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
+        console.log(res.data);
         setItems(res.data);
+        setItemsLoaded(true);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+    }
+  }, [itemsloaded]);
+
 
   const handleDelete = (key) => {
     if(window.confirm("Are you sure You want to delete this item ?")){
@@ -51,7 +59,8 @@ export default function AdminItemsPage() {
     
     }).then((res)=>{
       console.log(res.data);
-      window.location.reload()
+      setItemsLoaded(false);
+   
     }).catch((err)=>{
       console.log(err);
     })
@@ -59,8 +68,9 @@ export default function AdminItemsPage() {
   };
 
   return (
-    <div className="w-full h-full p-6">
-      <div className="overflow-x-auto">
+    <div className="w-full h-full p-6 flex items-center flex-col">
+      {!itemsloaded && <div className="border-4 my-4 border-b-green-500 rounded-full animate-spin w-[100px] h-[100px]"></div>}
+     {itemsloaded && <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300 shadow-lg rounded-lg">
           <thead>
             <tr className="bg-gray-100 text-gray-700">
@@ -103,7 +113,7 @@ export default function AdminItemsPage() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>}
       <Link to="/admin/items/add" className="fixed right-4 bottom-4">
         <CiCirclePlus className="text-blue-500 text-6xl hover:text-blue-700 transition-all" />
       </Link>
