@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 export default function UpdateItemPage() {
   const location = useLocation();
   console.log(location)
-  
+
   const [productKey, setProductKey] = useState(location.state.key);
   const [productName, setProductName] = useState(location.state.name);
   const [productPrice, setProductPrice] = useState(location.state.price);
@@ -25,8 +25,8 @@ export default function UpdateItemPage() {
 
     if(token){
         try{
-      const result= await axios.post("http://localhost:3002/api/products",{
-            key:productKey,
+      const result= await axios.put("http://localhost:3002/api/products/"+productKey,{
+            
             name:productName,
             price:productPrice,
             category:productCategory,
@@ -55,6 +55,7 @@ export default function UpdateItemPage() {
       <h1 className="text-xl font-bold mb-4">Update Item</h1>
       <div className="w-[400px] border p-4 flex flex-col gap-3 rounded-lg shadow-md">
         <input
+          disabled
           onChange={(e) => setProductKey(e.target.value)}
           value={productKey}
           type="text"
@@ -90,7 +91,7 @@ export default function UpdateItemPage() {
           placeholder="Product Dimensions"
           className="border p-2 w-full rounded"
         />
-        <input
+        <textarea
           onChange={(e) => setProductDescription(e.target.value)}
           value={productDescription}
           type="text"

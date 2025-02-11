@@ -3,29 +3,10 @@ import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
 
-const sampleArr = [
-  {
-    key: "AUDIO001",
-    name: "Wireless Headphones",
-    price: 99.99,
-    category: "Audio",
-    description: "High-quality wireless headphones with noise cancellation.",
-    dimension: "8 x 6 x 3 inches",
-    availability: true,
-  },
-  {
-    key: "LIGHT001",
-    name: "Smart LED Bulb",
-    price: 19.99,
-    category: "Light",
-    description: "Energy-efficient smart LED bulb with Wi-Fi control.",
-    dimension: "5 x 2 x 2 inches",
-    availability: true,
-  },
-];
+
 
 export default function AdminItemsPage() {
-  const [items, setItems] = useState(sampleArr);
+  const [items, setItems] = useState([]);
   const [itemsloaded, setItemsLoaded] = useState(false);
   const navigate =useNavigate()
 
