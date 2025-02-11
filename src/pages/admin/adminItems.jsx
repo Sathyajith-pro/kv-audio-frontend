@@ -1,108 +1,112 @@
-const sampleArr = [
-    {
-      key: "AUDIO001",
-      name: "Wireless Headphones",
-      price: 99.99,
-      category: "Audio",
-      description: "High-quality wireless headphones with noise cancellation.",
-      dimension: "8 x 6 x 3 inches",
-      availability: true,
-      image: [
-        "https://example.com/images/headphones1.jpg",
-        "https://example.com/images/headphones2.jpg",
-      ],
-    },
-    {
-      key: "LIGHT001",
-      name: "Smart LED Bulb",
-      price: 19.99,
-      category: "Light",
-      description: "Energy-efficient smart LED bulb with Wi-Fi control.",
-      dimension: "5 x 2 x 2 inches",
-      availability: true,
-      image: [
-        "https://example.com/images/bulb1.jpg",
-        "https://example.com/images/bulb2.jpg",
-      ],
-    },
-    {
-      key: "AUDIO002",
-      name: "Bluetooth Speaker",
-      price: 49.99,
-      category: "Audio",
-      description: "Portable Bluetooth speaker with deep bass and waterproof design.",
-      dimension: "7 x 3 x 3 inches",
-      availability: false,
-      image: [
-        "https://example.com/images/speaker1.jpg",
-        "https://example.com/images/speaker2.jpg",
-      ],
-    },
-    {
-      key: "LIGHT002",
-      name: "Desk Lamp",
-      price: 29.99,
-      category: "Light",
-      description: "Adjustable LED desk lamp with touch control and USB charging port.",
-      dimension: "10 x 5 x 5 inches",
-      availability: true,
-      image: [
-        "https://example.com/images/desk-lamp1.jpg",
-        "https://example.com/images/desk-lamp2.jpg",
-      ],
-    },
-    {
-      key: "AUDIO003",
-      name: "Soundbar",
-      price: 149.99,
-      category: "Audio",
-      description: "Dolby Atmos soundbar for an immersive audio experience.",
-      dimension: "35 x 4 x 3 inches",
-      availability: true,
-      image: [
-        "https://example.com/images/soundbar1.jpg",
-        "https://example.com/images/soundbar2.jpg",
-      ],
-    },
-  ];
-
-
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import { Link } from "react-router-dom";
-export default function AdminItemsPage(){
-    const[items,setItems] = useState(sampleArr);
-    return(
-        <div className="w-full h-full relative">
-            <table>
-                <thead>
-                    <th>Key</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Dimention</th>
-                    <th>Availability</th>
-                </thead>
-                <tbody>
-                {
-                    items.map((product)=>{
-                        console.log(product)
-                        return(
-                            <tr key={product.key}>
-                                <td>{product.key}</td>
-                                <td>{product.name}</td>
-                                <td>{product.price}</td>
-                                <td>{product.category}</td>
-                                <td>{product.dimention}</td>
-                                <td>{product.availability ? "Available" : true}</td>
-                            </tr>
-                        )
-                    })
-                }
-                </tbody>
-            </table>
-            <Link to="/admin/items/add">
-            <CiCirclePlus className="text-[100px] flex absolute right-2 bottom-2 hover:text-red-900 hover:text-[120px]" />
-            </Link>
-        </div>
-    )
+
+const sampleArr = [
+  {
+    key: "AUDIO001",
+    name: "Wireless Headphones",
+    price: 99.99,
+    category: "Audio",
+    description: "High-quality wireless headphones with noise cancellation.",
+    dimension: "8 x 6 x 3 inches",
+    availability: true,
+  },
+  {
+    key: "LIGHT001",
+    name: "Smart LED Bulb",
+    price: 19.99,
+    category: "Light",
+    description: "Energy-efficient smart LED bulb with Wi-Fi control.",
+    dimension: "5 x 2 x 2 inches",
+    availability: true,
+  },
+];
+
+export default function AdminItemsPage() {
+  const [items, setItems] = useState(sampleArr);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:3002/api/products", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setItems(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleDelete = (key) => {
+    if(window.confirm("Are you sure You want to delete this item ?")){
+    setItems(items.filter((item) => item.key !== key));
+    const token = localStorage.getItem("token");
+
+    axios.delete(`http://localhost:3002/api/products/${key}`,{
+      headers : {Authorization: `Bearer ${token}`},
+    
+    }).then((res)=>{
+      console.log(res.data);
+      window.location.reload()
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
+  };
+
+  return (
+    <div className="w-full h-full p-6">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-300 shadow-lg rounded-lg">
+          <thead>
+            <tr className="bg-gray-100 text-gray-700">
+              <th className="p-3 border">Key</th>
+              <th className="p-3 border">Name</th>
+              <th className="p-3 border">Price ($)</th>
+              <th className="p-3 border">Category</th>
+              <th className="p-3 border">Dimension</th>
+              <th className="p-3 border">Availability</th>
+              <th className="p-3 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((product) => (
+              <tr key={product.key} className="hover:bg-gray-50">
+                <td className="p-3 border text-center">{product.key}</td>
+                <td className="p-3 border text-center">{product.name}</td>
+                <td className="p-3 border text-center">${product.price.toFixed(2)}</td>
+                <td className="p-3 border text-center">{product.category}</td>
+                <td className="p-3 border text-center">{product.dimension}</td>
+                <td className="p-3 border text-center">
+                  {product.availability ? (
+                    <span className="text-green-600 font-semibold">Available</span>
+                  ) : (
+                    <span className="text-red-600 font-semibold">Out of Stock</span>
+                  )}
+                </td>
+                <td className="p-3 border text-center space-x-2">
+                  <Link to={`/admin/items/edit/${product.key}`} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700">
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(product.key)}
+                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Link to="/admin/items/add" className="fixed right-4 bottom-4">
+        <CiCirclePlus className="text-blue-500 text-6xl hover:text-blue-700 transition-all" />
+      </Link>
+    </div>
+  );
 }
