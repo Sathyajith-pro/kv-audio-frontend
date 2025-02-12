@@ -20,7 +20,7 @@ export default function AddItemPage() {
 
     if(token){
         try{
-      const result= await axios.post("http://localhost:3002/api/products",{
+      const result= await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products`,{
             key:productKey,
             name:productName,
             price:productPrice,
