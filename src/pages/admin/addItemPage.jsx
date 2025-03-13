@@ -16,12 +16,12 @@ export default function AddItemPage() {
 
   async function handleAddItem() {
     console.log(productImages)
-    const Promises= []
+    const promises= []
 
     for(let i=0; i<productImages.length;i++){
       console.log(productImages[i]);
       const Promise = mediaUpload(productImages[i])
-      Promises.push(Promise);
+      promises.push(Promise);
 
       //---Only 5 images can upload---
       // if(i==5){
@@ -47,7 +47,7 @@ export default function AddItemPage() {
     //   toast.error(err)
     // });
 
-    const imageUrls = await Promise.all(Promises);  //async awit methode (get image urls)
+    const imageUrls = await Promise.all(promises);  //async awit methode (get image urls)
     
       const result= await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products`,{
             key:productKey,

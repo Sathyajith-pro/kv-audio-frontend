@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function UpdateItemPage() {
   const location = useLocation();
@@ -13,11 +14,31 @@ export default function UpdateItemPage() {
   const [productCategory, setProductCategory] = useState(location.state.category);
   const [productDimension, setProductDimension] = useState(location.state.dimension);
   const [productDescription, setProductDescription] = useState(location.state.description);
+  const [productImages,setProductImages] = useState([]);
   const navigate = useNavigate();
 
   
 
-  async function handleAddItem() {
+  async function handleUpdateItem() {
+
+    let updatingImages = location.state.image //current images
+
+    if(productImages.length > 0 ){
+      const promises = [];
+
+       for(let i=0; i<productImages.length;i++){
+            console.log(productImages[i]);
+            const Promise = mediaUpload(productImages[i])
+            promises.push(Promise);
+      
+            //---Only 5 images can upload---
+            // if(i==5){
+            //   toast.error("You can only upload 25 images at at a time")
+            //   break;
+            // }
+          }
+          updatingImages = await Promise.all(promises);  //update new images
+    }
     
     console.log( productKey,productName,productPrice,productCategory,productDimension,productDescription);
     const token = localStorage.getItem("token")
@@ -31,7 +52,8 @@ export default function UpdateItemPage() {
             price:productPrice,
             category:productCategory,
             description:productDescription,
-            dimension:productDimension
+            dimension:productDimension,
+            image : updatingImages
         },{
             headers :{
                 Authorization : "Bearer "+ token
@@ -98,8 +120,9 @@ export default function UpdateItemPage() {
           placeholder="Product Description"
           className="border p-2 w-full rounded"
         />
+        <input type="file" multiple onChange={(e)=>{setProductImages(e.target.files)}} className="w-full p-2 border rounded" />
         <button
-          onClick={handleAddItem}
+          onClick={handleUpdateItem}
           className="bg-blue-500 text-white p-2 w-full rounded hover:bg-blue-600"
         >
           Update
